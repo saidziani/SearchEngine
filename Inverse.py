@@ -84,9 +84,28 @@ class Inverse():
 
             ponderations.append((files[i], pds))
         return ponderations
+
+    def getPondSpec(self, wordList):
+        N = len(self.dirFiles())
+        files = self.dirFiles()
+        inv = self.getInv()
+        maxs = self.getMaxDocsOcc()
+        ponderations = []
+        for i in range(N):
+            pds = []
+            for item in inv:
+                if item[0] in wordList:
+                    freq, word, nbDocsOcc, max = item[i+1], item[0], item[-1], maxs[i]
+
+                    pd = (freq/max) * math.log10((N/nbDocsOcc)+1)
+                    pds.append((word,pd))
+
+            ponderations.append((files[i], pds))
+        return ponderations
         
 
 
-# if __name__ == "__main__":
-#     inv = Inverse('docs/')
-#     print(inv.getPonderation())
+if __name__ == "__main__":
+    inv = Inverse('docs/') 
+    wordList = ['langage', 'java']
+    print(inv.getPondSpec(wordList))

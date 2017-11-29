@@ -21,8 +21,8 @@ class Vectorial():
 
 
     def innerProduct(self):
-        pond = Inverse.Inverse(self.directory).getPonderation()
         propQuery, FreqDist = self.getPropQuery()
+        pond = Inverse.Inverse(self.directory).getPondSpec(propQuery)
         rsvDocs = []
         for doc in pond:
             RSV = 0
@@ -37,8 +37,8 @@ class Vectorial():
 
 
     def diceCoef(self):
-        pond = Inverse.Inverse(self.directory).getPonderation()
         propQuery, FreqDist = self.getPropQuery()
+        pond = Inverse.Inverse(self.directory).getPondSpec(propQuery)
         sumFreqDist = 0
         for item in FreqDist.values():
             powFreq = item * item
@@ -61,12 +61,13 @@ class Vectorial():
 
 
     def cosinusMesure(self):
-        pond = Inverse.Inverse(self.directory).getPonderation()
         propQuery, FreqDist = self.getPropQuery()
+        pond = Inverse.Inverse(self.directory).getPondSpec(propQuery)
         sumFreqDist = 0
         for item in FreqDist.values():
             powFreq = item * item
             sumFreqDist += powFreq
+
         rsvDocs = []
         for doc in pond:
             subRSV = 0
@@ -78,15 +79,18 @@ class Vectorial():
                     word = docTuple[0]
                     occ, freq = FreqDist[word], docTuple[1]
                     subRSV +=  (occ * freq)
-            RSV = (subRSV) / math.sqrt(sumPond * sumFreqDist)
+            calc = math.sqrt(sumPond * sumFreqDist)
+            RSV = 0
+            if (calc != 0):
+                RSV = (subRSV) / calc
             rsvDocs.append((doc[0], round(float(RSV),3)))
             rsvDocsSorted = sorted(rsvDocs, key=itemgetter(1), reverse=True)
         return rsvDocsSorted
 
 
     def jaccardMesure(self):
-        pond = Inverse.Inverse(self.directory).getPonderation()
         propQuery, FreqDist = self.getPropQuery()
+        pond = Inverse.Inverse(self.directory).getPondSpec(propQuery)
         sumFreqDist = 0
         for item in FreqDist.values():
             powFreq = item * item
@@ -115,11 +119,11 @@ class Vectorial():
 # if __name__ == "__main__":
 #     a = "langage le python langage "
     
-#     v = Vectorial('/media/said/DevStuff/Master2-Sii/RI/Projet_RI/docs/docs/', a)
+#     v = Vectorial('/media/said/DevStuff/Master2-Sii/RI/Projet_RI/docs/', a)
 
-#     print("Dice coef", v.diceCoef())
-#     print("Cos mesure", v.cosinusMesure())
-#     print("Jaccard mesure", v.jaccardMesure())
+#     # print("Dice coef", v.diceCoef())
+#     # print("Cos mesure", v.cosinusMesure())
+#     # print("Jaccard mesure", v.jaccardMesure())
 #     print("inner product", v.innerProduct())
 
 
