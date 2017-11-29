@@ -60,7 +60,7 @@ class Indexation():
             text = index.getTextList()
             if query != '':
                 b = BooleanSearch.BooleanSearch(text, query)
-                if b.search():
+                if eval(b.creatBoolQuery()):
                     result.append(file)
 
         if len(result) == 0:
