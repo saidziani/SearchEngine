@@ -5,8 +5,9 @@ import os, math
 
 class Inverse():
 
-    def __init__(self, directory = False):
+    def __init__(self, directory = False, exped = 1):
         self.directory = directory
+        self.exped = exped
 
 
     def dirFiles(self):
@@ -14,18 +15,33 @@ class Inverse():
 
 
     def buildInv(self):
-        files = self.dirFiles()
+        if self.exped == 1:
+            files = self.dirFiles()
+        else:
+            files = self.directory
+
         for file in files:
-            index = Indexation.Indexation(self.directory+''+file)
+            if self.exped == 1:
+                index = Indexation.Indexation(self.directory+''+file)
+            else:
+                index = Indexation.Indexation(file)
             dic = index.getFreqDist()
             index.writeSortedDic(dic)
 
 
     def nbDocsOcc(self, word):
         nbDocs = 0
-        files = self.dirFiles()
+        if self.exped == 1:
+            files = self.dirFiles()
+        else:
+            files = self.directory
+
         for file in files:
-            index = Indexation.Indexation(self.directory+''+file)
+            if self.exped == 1:
+                index = Indexation.Indexation(self.directory+''+file)
+            else:
+                index = Indexation.Indexation(file)
+
             if index.nbWordOcc(word):
                 nbDocs += 1
         return nbDocs
@@ -33,9 +49,15 @@ class Inverse():
 
     def getSetWords(self):
         wordsSet = []
-        files = self.dirFiles()
+        if self.exped == 1:
+            files = self.dirFiles()
+        else:
+            files = self.directory
         for file in files:
-            index = Indexation.Indexation(self.directory+''+file)
+            if self.exped == 1:
+                index = Indexation.Indexation(self.directory+''+file)
+            else:
+                index = Indexation.Indexation(file)
             words = index.getTextList()
             wordsSet.extend(words)
 
@@ -43,13 +65,19 @@ class Inverse():
 
 
     def getInv(self):
-        files = self.dirFiles()
+        if self.exped == 1:
+            files = self.dirFiles()
+        else:
+            files = self.directory
         setWords = self.getSetWords()
         inv = []
         for word in setWords:
             freq = [word]
             for file in files:
-                index = Indexation.Indexation(self.directory+''+file)
+                if self.exped == 1:
+                    index = Indexation.Indexation(self.directory+''+file)
+                else:
+                    index = Indexation.Indexation(file)
                 nbWordOcc = index.nbWordOcc(word)
                 freq.append(nbWordOcc)
             freq.append(self.nbDocsOcc(word))
@@ -58,19 +86,29 @@ class Inverse():
 
 
     def getMaxDocsOcc(self):
-        files = self.dirFiles()
+        if self.exped == 1:
+            files = self.dirFiles()
+        else:
+            files = self.directory
+        
         maxs = []
         for file in files:
-            index = Indexation.Indexation(self.directory+''+file)
+            if self.exped == 1:
+                index = Indexation.Indexation(self.directory+''+file)
+            else:
+                index = Indexation.Indexation(file)
             max = index.getMaxDist()
             maxs.append(max)
         return maxs
 
 
     def getPonderation(self):
-        # ['conceiving', 0, 1, 1]
-        N = len(self.dirFiles())
-        files = self.dirFiles()
+        if self.exped == 1:
+            files = self.dirFiles()
+        else:
+            files = self.directory
+        
+        N = len(files)
         inv = self.getInv()
         maxs = self.getMaxDocsOcc()
         ponderations = []
@@ -86,8 +124,13 @@ class Inverse():
         return ponderations
 
     def getPondSpec(self, wordList):
-        N = len(self.dirFiles())
-        files = self.dirFiles()
+        if self.exped == 1:
+            files = self.dirFiles()
+        else:
+            files = self.directory
+        
+        N = len(files)
+
         inv = self.getInv()
         maxs = self.getMaxDocsOcc()
         ponderations = []
