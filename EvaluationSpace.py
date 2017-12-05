@@ -113,6 +113,7 @@ class EvaluationSpace(object):
         self.pushButton3.setStyleSheet("background-color: #0C2444;color:#fff;font-size:14px;border-radius: 15px")
         self.pushButton3.clicked.connect(self.vectorialSearch)
         self.pushButton3.clicked.connect(self.evaluation)
+        self.lineEdit.returnPressed.connect(self.vectorialSearch)
 
 
         self.pushButton4 = QtWidgets.QPushButton(Form) 
@@ -124,19 +125,16 @@ class EvaluationSpace(object):
 
 
         self.tableView = QtWidgets.QTableView(Form)
-        self.tableView.setGeometry(QtCore.QRect(145, 420, 515, 100))
+        self.tableView.setGeometry(QtCore.QRect(145, 400, 515, 120))
         self.tableView.setObjectName("tableView")
-        model = QtGui.QStandardItemModel()
-        model.setHorizontalHeaderLabels(['Inner. Product', 'Dice. Coef', 'Jaccard', 'Cosin'])
-        item = QtGui.QStandardItem('555')
-        item2 = QtGui.QStandardItem('225')
-        model.appendRow(item)
-        model.appendRow(item2)
+        self.model = QtGui.QStandardItemModel()
+        self.model.setHorizontalHeaderLabels(['Inner. Product', 'Dice. Coef', 'Jaccard', 'Cosin'])
 
+        self.tableView.verticalHeader().hide()       
 
-        self.tableView.setModel(model)
-        self.tableView.horizontalHeader().setDefaultSectionSize(125)
-        # self.tableView.hide()
+        self.tableView.setModel(self.model)
+        self.tableView.horizontalHeader().setDefaultSectionSize(124)
+
 
         self.label4Combo = QtWidgets.QLabel(Form)
         self.label4Combo.setGeometry(QtCore.QRect(180, 315, 200, 30))
@@ -200,6 +198,10 @@ class EvaluationSpace(object):
 
     def getDir(self):
         global repertory
+
+        self.listWidget.clear()
+        self.listWidget2.clear()
+
         directory = str(QtWidgets.QFileDialog.getExistingDirectory())
         self.lineEdit.setDisabled(False)
         self.label_4.setDisabled(False)
@@ -226,6 +228,7 @@ class EvaluationSpace(object):
 
     def vectorialSearch(self):
         global repertory
+        self.tableView.model().clear()
         
         query = str(self.lineEdit.text().lower())
         dirrr, everything = [], []
@@ -238,15 +241,24 @@ class EvaluationSpace(object):
 
         self.filesSelected, self.allFiles = dirrr, everything
 
-        # vectorial = Vectorial.Vectorial(dirrr, query, 2)
-        # inner, dice, cos, jaccard = [], [], [], []
-        # inner = vectorial.innerProduct()
-        # print(inner)
-        # dice = vectorial.diceCoef()
-        # cos = vectorial.cosinusMesure()
-        # jaccard = vectorial.jaccardMesure()
+        vectorial = Vectorial.Vectorial(dirrr, query, 2)
+        inner, dice, cos, jaccard = [], [], [], []
+        inner = vectorial.innerProduct()
+        dice = vectorial.diceCoef()
+        cos = vectorial.cosinusMesure()
+        jaccard = vectorial.jaccardMesure()
+
+        for i in range(len(dirrr)):
+            rowPosition = self.model.rowCount()
+            self.model.insertRow(rowPosition)
+            self.model.setItem(rowPosition , 0, QtGui.QStandardItem(inner[i][0].split('/')[-1]+','+str(inner[i][1])))
+            self.model.setItem(rowPosition , 1, QtGui.QStandardItem(dice[i][0].split('/')[-1]+','+str(dice[i][1])))
+            self.model.setItem(rowPosition , 2, QtGui.QStandardItem(jaccard[i][0].split('/')[-1]+','+str(jaccard[i][1])))
+            self.model.setItem(rowPosition , 3, QtGui.QStandardItem(cos[i][0].split('/')[-1]+','+str(cos[i][1])))
+
 
     def evaluation(self):
+
         choice = self.comboBox.currentText()
         dirrr = self.filesSelected
         allFiles = self.allFiles
@@ -299,6 +311,10 @@ class EvaluationSpace(object):
         self.label_7.setText('')
         self.label_8.setText('')
         self.lineEdit.setText('')
+        self.listWidget.clear()
+        self.listWidget2.clear()
+        self.tableView.model().clear()
+
 
 
 
