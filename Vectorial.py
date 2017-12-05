@@ -6,9 +6,10 @@ from operator import itemgetter
 
 class Vectorial():
 
-    def __init__(self, directory = False, query = False):
+    def __init__(self, directory = False, query = False, exped = 1):
         self.directory = directory
         self.query = query
+        self.exped = exped
 
 
     def getPropQuery(self):
@@ -22,7 +23,11 @@ class Vectorial():
 
     def innerProduct(self):
         propQuery, FreqDist = self.getPropQuery()
-        pond = Inverse.Inverse(self.directory).getPondSpec(propQuery)
+        if self.exped == 1:
+            pond = Inverse.Inverse(self.directory).getPondSpec(propQuery)
+        else:
+            pond = Inverse.Inverse(self.directory, 2).getPondSpec(propQuery)
+
         rsvDocs = []
         for doc in pond:
             RSV = 0
@@ -38,7 +43,11 @@ class Vectorial():
 
     def diceCoef(self):
         propQuery, FreqDist = self.getPropQuery()
-        pond = Inverse.Inverse(self.directory).getPondSpec(propQuery)
+        if self.exped == 1:
+            pond = Inverse.Inverse(self.directory).getPondSpec(propQuery)
+        else:
+            pond = Inverse.Inverse(self.directory, 2).getPondSpec(propQuery)
+
         sumFreqDist = 0
         for item in FreqDist.values():
             powFreq = item * item
@@ -62,7 +71,11 @@ class Vectorial():
 
     def cosinusMesure(self):
         propQuery, FreqDist = self.getPropQuery()
-        pond = Inverse.Inverse(self.directory).getPondSpec(propQuery)
+        if self.exped == 1:
+            pond = Inverse.Inverse(self.directory).getPondSpec(propQuery)
+        else:
+            pond = Inverse.Inverse(self.directory, 2).getPondSpec(propQuery)
+
         sumFreqDist = 0
         for item in FreqDist.values():
             powFreq = item * item
@@ -90,7 +103,11 @@ class Vectorial():
 
     def jaccardMesure(self):
         propQuery, FreqDist = self.getPropQuery()
-        pond = Inverse.Inverse(self.directory).getPondSpec(propQuery)
+        if self.exped == 1:
+            pond = Inverse.Inverse(self.directory).getPondSpec(propQuery)
+        else:
+            pond = Inverse.Inverse(self.directory, 2).getPondSpec(propQuery)
+            
         sumFreqDist = 0
         for item in FreqDist.values():
             powFreq = item * item
