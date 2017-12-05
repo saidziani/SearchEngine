@@ -69,41 +69,7 @@ class SearchSpaceBool(object):
         self.label2Hide.setObjectName("label2Hide")
         self.label2Hide.setStyleSheet("font-weight:200;\n"
 "font-size:15px")
-        self.label2Hide.setText("NOTE: Ajouter votre collection, taper votre requête et cliquer sur l’icône de recherche. ")
-
-
-
-        self.label_5 = QtWidgets.QLabel(Form)
-        self.label_5.setGeometry(QtCore.QRect(150, 220, 100, 30))
-        self.label_5.setObjectName("label_5")
-        self.label_5.setStyleSheet("font-size:20px")
-        self.label_5.hide()
-
-        self.label_6 = QtWidgets.QLabel(Form)
-        self.label_6.setGeometry(QtCore.QRect(150, 260, 100, 30))
-        self.label_6.setStyleSheet("font-size:20px")
-        self.label_6.setObjectName("label_6")
-        self.label_6.hide()
-
-        self.label_7 = QtWidgets.QLabel(Form)
-        self.label_7.setGeometry(QtCore.QRect(150, 300, 100, 30))
-        self.label_7.setObjectName("label_7")
-        self.label_7.setStyleSheet("font-size:20px")
-        self.label_7.hide()
-
-        self.label_8 = QtWidgets.QLabel(Form)
-        self.label_8.setGeometry(QtCore.QRect(150, 340, 100, 30))
-        self.label_8.setObjectName("label_8")
-        self.label_8.setStyleSheet("font-size:20px")
-        self.label_8.hide()
-
-        self.label_9 = QtWidgets.QLabel(Form)
-        self.label_9.setGeometry(QtCore.QRect(150, 380, 100, 30))
-        self.label_9.setObjectName("label_9")
-        self.label_9.setStyleSheet("font-size:20px")
-        self.label_9.hide()
-
-     
+        self.label2Hide.setText("NOTE: Ajouter votre collection, taper votre requête et cliquer sur l’icône de recherche. ")     
 
 
         self.label_4 = QtWidgets.QLabel(Form)
@@ -117,8 +83,12 @@ class SearchSpaceBool(object):
         self.label_4.mousePressEvent = self.booleanSearch
         self.lineEdit.returnPressed.connect(self.booleanSearch)
 
-       
-        
+        self.listWidget = QtWidgets.QListWidget(Form)
+        self.listWidget.setGeometry(QtCore.QRect(180, 230, 450, 200))
+        self.listWidget.setObjectName("listWidget")
+        self.listWidget.setStyleSheet("background-color:#f7f7f7;font-size:22px;font-weight:500;")
+        self.listWidget.hide()
+
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
@@ -128,14 +98,11 @@ class SearchSpaceBool(object):
         self.label.setText(_translate("Form", ""))
         self.label_2.setText(_translate("Form", ""))
         self.label_3.setText(_translate("Form", "Les résultats de la recherche dans l'ordre de pertinence:"))
-        
-        
         self.pushButton_2.setText(_translate("Form", "..."))
         self.label_4.setText(_translate("Form", ""))
         
 
     def retour(self, event):
-        print('BACK')
         self.closeWindow()
 
     def getDir(self):
@@ -144,7 +111,6 @@ class SearchSpaceBool(object):
         self.lineEdit.setDisabled(False)
         self.label_4.setDisabled(False)
         repertory = directory
-        print(repertory)
 
     
 
@@ -157,44 +123,17 @@ class SearchSpaceBool(object):
         result = []
         index = Indexation.Indexation(False)
         result = index.booleanSearch(dirrr, query)
-        print("Q:",query, "R:", result)
         sizeResult = len(result)
-        self.label_5.setText("")
-        self.label_6.setText("")
-        self.label_7.setText("")
-        self.label_8.setText("")
-        self.label_9.setText("")
 
         for i, res in zip(range(sizeResult),result):
-            if i == 0:
-                self.label_5.setText(res)
-                self.label_5.mousePressEvent = functools.partial(self.openFile, file=str(repertory)+"/"+str(res))
-                self.label_5.show()
-
-            if i == 1:
-                self.label_6.setText(res)
-                self.label_6.mousePressEvent = functools.partial(self.openFile, file=str(repertory)+"/"+str(res))
-                self.label_6.show()
-
-            if i == 2:
-                self.label_7.setText(res)
-                self.label_7.mousePressEvent = functools.partial(self.openFile, file=str(repertory)+"/"+str(res))
-                self.label_7.show()
-
-            if i == 3:
-                self.label_8.setText(res)
-                self.label_8.mousePressEvent = functools.partial(self.openFile, file=str(repertory)+"/"+str(res))
-                self.label_8.show()
-
-            if i == 4:
-                self.label_9.setText(res)
-                self.label_9.mousePressEvent = functools.partial(self.openFile, file=str(repertory)+"/"+str(res))
-                self.label_9.show()
-
+            self.listWidget.addItem(res)
+        self.listWidget.show()
+        self.listWidget.itemClicked.connect(self.openFile)
 
         
-    def openFile(self, event, file):
+    def openFile(self, item):
         import os
+        file = repertory+"/"+item.text()
         os.system("subl "+file)
 
 
