@@ -111,6 +111,7 @@ class SearchSpaceBool(object):
         self.lineEdit.setDisabled(False)
         self.label_4.setDisabled(False)
         repertory = directory
+        print(repertory)
 
     
 

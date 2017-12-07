@@ -16,6 +16,7 @@ class BooleanSearch():
 
     def creatBoolQuery(self):
         querySplited = self.createQueryToEval()
+        print(querySplited)
         newQuery = ""
         exist = []
 
@@ -40,6 +41,7 @@ class BooleanSearch():
                 newQuery += ' or '
             else:
                 newQuery += " 0 "
+        print(newQuery)
         return newQuery
 
 
