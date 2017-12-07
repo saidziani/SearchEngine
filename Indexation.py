@@ -31,6 +31,34 @@ class Indexation():
         ponctuation = re.compile('[^\w\s]?', re.IGNORECASE)
         return re.sub(ponctuation, '', text)
 
+    def dropApostrophe(self, text):
+        listText = text
+        for word in text:
+            if '\'' in word:
+                newText = word.split('\'')
+                listText.extend(newText)
+                listText.remove(word)
+
+        return listText
+
+    def dropVirgule(self, text):
+        listText = text
+        for word in text:
+            if "," in word:
+                newWord = re.sub(",", "", word)
+                listText.append(newWord)
+                listText.remove(word)
+        return listText
+
+    def dropPoint(self, text):
+        listText = text
+        for word in text:
+            if "." in word:
+                newWord = re.sub(".", "", word)
+                listText.append(newWord)
+                listText.remove(word)
+        return listText
+
     def getFreqDist(self):
         text = self.getTextList()
         return nltk.FreqDist(text)
@@ -39,6 +67,11 @@ class Indexation():
         text = self.load(1)
         text = self.dropPonctuation()
         text = self.dropEmptyWords()
+        text = self.dropApostrophe(text)
+        text = self.dropVirgule(text)
+        text = self.dropPoint(text)
+
+
         return text
 
     def nbWordOcc(self, word):
@@ -58,6 +91,7 @@ class Indexation():
         for file in files:
             index = Indexation(dirrr+"/"+file)
             text = index.getTextList()
+            print(text)
             if query != '':
                 b = BooleanSearch.BooleanSearch(text, query)
                 if eval(b.creatBoolQuery()):

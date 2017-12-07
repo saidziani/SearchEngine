@@ -74,6 +74,7 @@ class Inverse():
         for word in setWords:
             freq = [word]
             for file in files:
+                # print(file)
                 if self.exped == 1:
                     index = Indexation.Indexation(self.directory+''+file)
                 else:
@@ -82,6 +83,8 @@ class Inverse():
                 freq.append(nbWordOcc)
             freq.append(self.nbDocsOcc(word))
             inv.extend([freq])
+        # print(files)
+        # print(inv)
         return inv
 
 
@@ -121,6 +124,7 @@ class Inverse():
                 pds.append((word,pd))
 
             ponderations.append((files[i], pds))
+        print(ponderations)
         return ponderations
 
     def getPondSpec(self, wordList):
@@ -144,6 +148,7 @@ class Inverse():
                     pds.append((word,pd))
 
             ponderations.append((files[i], pds))
+        print(ponderations)
         return ponderations
         
 
